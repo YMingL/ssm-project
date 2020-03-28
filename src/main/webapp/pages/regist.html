@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text],input[type=password], select, textarea {
+            width: 300px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit],input[type=button] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 85px;
+            width: 50px;
+            height: 35px;
+        }
+
+        input[type=submit],input[type=button]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin: 5% auto;
+            width: 400px;
+            height: 400px;
+        }
+
+        .col-1 {
+            float: left;
+            width: 60px;
+            margin-top: 6px;
+        }
+
+        .col-2 {
+            float: left;
+            width:300px;
+            margin-top: 6px;
+        }
+        .col-3 {
+            float: none;
+            margin-top: 6px;
+            margin-left: 60px;
+        }
+
+        /* 清除浮动 */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="loginForm">
+        <div class="row">
+            <div class="col-1">
+                <label for="userName">用户名</label>
+            </div>
+            <div class="col-2">
+                <input type="text" id="userName" name="userName" placeholder="Your name..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_uesrName"></span>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                <label for="password">密&#12288;码</label>
+            </div>
+            <div class="col-2">
+                <input type="password" id="password" name="password" placeholder="Your password..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_pass"></span>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                <label for="phone">电&#12288;话</label>
+            </div>
+            <div class="col-2">
+                <input type="text" id="phone" name="phone" placeholder="Your phone..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_phone"></span>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                <label for="mail">邮&#12288;箱</label>
+            </div>
+            <div class="col-2">
+                <input type="text" id="mail" name="mail" placeholder="Your mail..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_mail"></span>
+        </div>
+        <div class="row">
+            <input class="col-3" type="button" id="submit-btn" value="保存">
+            <input class="col-3" type="button" id="empty-btn" value="重填">
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="/webGraduation_war_exploded/js/util.js"></script>
+<script type="text/javascript">
+    var flag_name = 0;
+    var flag_pass = 0;
+    var flag_phone = 0;
+    var flag_mail = 0;
+    $(document).ready(function () {
+        getFocus("userName");
+    })
+    $("#submit-btn").click(function () {
+        if( flag_name == 0 ||  flag_pass == 0 ||  flag_phone == 0 || flag_mail == 0){
+            alert("请完善信息！")
+        }else {
+            console.log($("#loginForm").serialize())
+            submitForm();
+        }
+    })
+    // 为每个校验单独设置flag 当失去焦点时进行校验，不合格反馈信息并置flag为0，反之置flag为1 当保存提交时 判断flag值，只有当所有flag为1时才能提交
+
+    //    姓名校验 姓名唯一
+    $("#userName").blur(function () {
+        if($("#userName").attr("value") != "" && $("#userName").attr("value").length <= 10){
+            $.ajax({
+                async:false,
+                url:getRootPath()+"/hasUserName",
+                type:"POST",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data:$("#userName"),
+                dataType:JSON,
+                success:function (data) {
+                    if (data >= 1){
+                        $("#info_uesrName").html("用户名已存在");
+                        flag_name = 0;
+                    }else {
+                        $("#info_uesrName").html("");
+                        flag_name = 1;
+                    }
+                },
+                error:function () {
+                    flag_name = 0;
+                    alert("获取数据失败")
+                }
+
+            })
+        }else if ($("#userName").attr("value") == ""){
+            $("#info_uesrName").html("用户名为空");
+            flag_name = 0;
+        }else if ($("#userName").attr("value").length > 10){
+            $("#info_uesrName").html("用户名过长");
+            flag_name = 0;
+        }
+    })
+    //    密码校验
+    $("#password").blur(function () {
+        //类型为password，无需此校验
+        // if($("#password").attr("value") != ""){
+        //     var reg = new RegExp("[\\u2E80-\\u9FFF]+","g");
+        //     if(reg.test($("#password").attr("value") )){alert("包含汉字！"); }
+        // }
+        //失去焦点正则判断是否合格
+        if($("#password").attr("value") == ""){
+            $("#info_pass").html("不能为空");
+            flag_pass = 0;
+        }else if($("#password").attr("value").length > 16 || $("#password").attr("value").length < 6){
+            $("#info_pass").html("密码长度为6-16");
+            flag_pass = 0;
+        }else {
+            $("#info_pass").text("");
+            flag_pass = 1;
+        }
+    })
+    //    电话校验
+    $("#phone").blur(function () {
+        if ($("#phone").attr("value") != ""){
+            if(!(/^1[0-9]{10}$/.test($("#phone").attr("value")))){
+                $("#info_phone").html("号码有误请重填");
+                flag_phone = 0;
+            }else {
+                $("#info_phone").html("");
+                flag_phone = 1;
+            }
+        }else if ($("#phone").attr("value") == ""){
+            $("#info_phone").html("号码不能为空");
+            flag_phone = 0;
+        }
+    })
+    //    邮箱校验
+    $("#mail").blur(function () {
+        if ($("#mail").attr("value") != ""){
+            if(!(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test($("#mail").attr("value")))){
+                $("#info_mail").html("邮箱有误请重填");
+                flag_mail = 0;
+            }else {
+                $("#info_mail").html("");
+                flag_mail = 1;
+            }
+        }else if ($("#mail").attr("value") == ""){
+            $("#info_mail").html("邮箱不能为空");
+            flag_mail = 0;
+        }
+    })
+
+    //暂时不做地址校验，添加省市联动
+    //    保存校验
+    //    提交注册表单
+    function submitForm() {
+        $.ajax({
+            async:false,
+            type:"POST",
+            url:getRootPath()+"/savingUsesr",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType: JSON,
+            data:$("#loginForm").serialize(),
+            success:function (data) {
+                if (data == 1){
+                    window.location.href=getRootPath()+"/pages/registSuccess.html"
+                }else {
+                    alert("注册失败！");
+                }
+            },
+            error:function () {
+                alert("错了!")
+            }
+        })
+    }
+
+    //    重填按钮
+
+</script>
+</html>

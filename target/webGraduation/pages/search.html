@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>搜索页面</title>
+    <link rel="import" href="head.html" id="head"/>
+    <link rel="stylesheet" type="text/css" href="/webGraduation_war_exploded/css/search-body.css"/>
+</head>
+<script type="text/javascript">
+    document.write(head.import.body.innerHTML);
+</script>
+<body>
+<div id="body">
+
+    <div id="gold_info" style="display:none;position: absolute;z-index:999;left:40%;top:40%" title="点击表格关闭">
+        <table id="table_gold" border="1" cellspacing="0" cellpadding="0" width="400">
+            <tr style="text-align: center;color: white">
+            </tr>
+            <tr style="text-align: center;color: white">
+            </tr>
+        </table>
+    </div>
+<!--    制作下拉菜单-->
+    <div id="menu" style="margin-top: 10%">
+        <ul>
+            <li class="menu-1">
+                <a href="#cloths" class="drop-btn">衣</a>
+                <ul class="menu-2">
+                    <li><a href="#coat">上衣</a></li>
+                    <li><a href="#pant">裤子</a></li>
+                    <li><a href="#shoes">鞋子</a></li>
+                    <li><a href="#underwear">内衣</a></li>
+                    <li><a href="#others">其它</a></li>
+                </ul>
+            </li>
+            <li class="menu-1">
+                <a href="#food" class="drop-btn">食</a>
+                <ul class="menu-2">
+                    <li><a href="#meat">肉类</a></li>
+                    <li><a href="#vegetables">蔬菜</a></li>
+                    <li><a href="#fruit">水果</a></li>
+                    <li><a href="#others">其它</a></li>
+                </ul>
+            </li>
+            <li class="menu-1">
+                <a href="#live" class="drop-btn">住</a>
+                <ul class="menu-2">
+                    <li><a href="#daily">日用</a></li>
+                    <li><a href="#furniture">家具</a></li>
+                    <li><a href="#kitchen">餐厨</a></li>
+                    <li><a href="#others">其它</a></li>
+                </ul>
+            </li>
+            <li class="menu-1">
+                <a href="#traffic" class="drop-btn">行</a>
+                <ul class="menu-2">
+                    <li><a href="#car">汽车</a></li>
+                    <li><a href="#motorcycle">摩托车</a></li>
+                    <li><a href="#bicycle">自行车</a></li>
+                    <li><a href="#others">其它</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="/webGraduation_war_exploded/js/util.js"></script>
+<script>
+    $(function () {
+        var username = getUserNameCookie("userName");
+        $.ajax({
+            async:false,
+            type:"POST",
+            url:getRootPath()+"/getGoldInfo",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            data:{
+                "userName":username
+            },
+            dataType:JSON,
+            success:function (data) {
+                data = eval("("+data+")");
+                var $table = $("#table_gold").find("tr")
+                var $tr = $("#table_gold").find("tr").first();
+                let week1 = ["周一","周二","周三","周日"];
+                let week2 = ["周四","周五","周六"];
+
+                // var $td = $("<td rowspan=\"2\"><span>"+week1[1]+"</span><br/><span>金币:&nbsp;<em>"+data.goldNums[1]+"</em></span></td>")
+                // $tr.append($td);
+                for (let i=0,len = $table.length;i<len;i++){
+                    let t;
+                    let week;
+                    if (i==0){
+                        t = 4;
+                        week = week1;
+                    }else {
+                        t=3;
+                        week = week2;
+                    }
+                    for (let x=0;x<t;x++){
+                        let td;
+                        let y;
+                        if(x==3){
+                            if (data.goldNums[6] == 0){
+                                td = $("<td rowspan=\"2\" style='background-color: white;color: red'><span>"+week[x]+"</span><br/><span>金币:&nbsp;<em>"+data.goldNums[6]+"</em></span></td>")
+                            }else {
+                                td = $("<td rowspan=\"2\" style='background-color: red'><span>"+week[x]+"</span><br/><span>金币:&nbsp;<em>"+data.goldNums[6]+"</em></span></td>")
+                            }
+
+                        }else {
+                            y = x;
+                            if(i==1){
+                                y = x+3;
+                            }
+                            if (data.goldNums[y] == 0){
+                                td = $("<td style='background-color: white;color: red'><span>"+week[x]+"</span><br/><span>金币:&nbsp;<em>"+data.goldNums[y]+"</em></span></td>")
+                            }else {
+                                td = $("<td style='background-color: red'><span>"+week[x]+"</span><br/><span>金币:&nbsp;<em>"+data.goldNums[y]+"</em></span></td>")
+                            }
+
+                        }
+
+                        $tr.append(td);
+                    }
+                    $tr = $tr.next("tr");
+                }
+
+                //根据金币数量决定色块颜色  改成根据条件添加类属性
+                $("#gold_info").css("display","block");
+            },
+            error:function () {
+                alert("获取数据失败-gold！")
+            }
+        })
+    })
+
+    $("#gold_info").click(function () {
+        $("#gold_info").css("display","none")
+    })
+</script>
+</html>

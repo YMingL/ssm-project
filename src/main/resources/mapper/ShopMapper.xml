@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.webgraduation.dao.ShopMapper">
+    <resultMap id="shopmapper" type="com.webgraduation.entity.Shop">
+        <id column="shopId" property="shopId"/>
+        <result column="shopName" property="shopName"/>
+        <result column="shopProvince" property="shopProvince"/>
+        <result column="shopAddress" property="shopAddress"/>
+    </resultMap>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="shopmapper">
+        select shopId,shopName,shopProvince,shopAddress from shop where shopId = #{shopId}
+    </select>
+
+    <select id="selectByName" parameterType="java.lang.String" resultMap="shopmapper">
+        select shopId,shopName,shopProvince,shopAddress from shop where shopName = #{shopName}
+    </select>
+
+    <insert id="insert" parameterType="com.webgraduation.entity.Shop">
+        insert into shop (shopId,shopName,shopProvince,shopAddress) values (#{shopId},#{shopName},#{shopProvince},#{shopAddress})
+    </insert>
+</mapper>

@@ -1,0 +1,22 @@
+#user-info{
+    height: 20px;
+    position: relative;
+    top:10px;
+    left: 75%;
+}
+
+#user-info a{
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    float: left;
+    margin: 0 5px 0 5px;
+}
+
+#user-info .user-info{
+    color: hotpink;
+}
+#user-info .user-info:hover{
+    color: red;
+    font-size: 15px;
+}

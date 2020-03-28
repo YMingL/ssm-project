@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+	    http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--加载db.properties--><!--扫描redis配置文件-->
+    <context:property-placeholder location="classpath:db.properties" ignore-unresolvable="true"></context:property-placeholder>
+
+<!--    配置druid连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="url" value="${druid.url}" />
+        <property name="username" value="${druid.username}" />
+        <property name="password" value="${druid.password}" />
+        <property name="filters" value="${druid.filters}" />
+        <property name="maxActive" value="${druid.maxActive}" />
+        <property name="initialSize" value="${druid.initialSize}" />
+        <property name="maxWait" value="${druid.maxWait}" />
+        <property name="minIdle" value="${druid.minIdle}" />
+    </bean>
+
+    <!--配置session工厂-->
+    <!--有几种session包可供使用？有什么区别？-->
+    <bean id="sqlSessionFaction" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+
+<!--        指定mapper位置-->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"/>
+        <!--指定需要使用别名的PO类所在的包 ,使用了别名的情况-->
+    </bean>
+
+<!--    mapper扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--如果需要扫描多个包，用逗号隔开-->
+        <property name="basePackage" value="com.webgraduation.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFaction"/>
+    </bean>
+
+    <!--配置事务管理，spring使用jdbc的事务控制类-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+<!--    通知-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.webgraduation.service.impl.*.*(..))"/>
+    </aop:config>
+</beans>

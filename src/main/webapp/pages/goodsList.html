@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="import" href="head.html" id="head"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        /* 创建三个不相等的列 */
+        .row {
+            width: 1650px;
+            height: 100%;
+            margin: 0.5% auto;
+        }
+        .column {
+            float: left;
+            padding: 20px;
+        }
+
+        /* 左右两侧宽度 */
+        .column.left {
+            width: 200px;
+            margin-right: 50px;
+        }
+        .column.right {
+            width: 200px;
+            margin-left: 50px;
+        }
+
+        /* 中间区域宽度 */
+        .column.middle {
+            width: 1000px;
+        }
+
+        /* 列后面清除浮动 */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /*    商品列表*/
+        .desc #price{
+            color: #e4393c;
+            font-size: 20px;
+            font-weight: 400;
+            font-family: Verdana;
+            text-align: left;
+        }
+        .desc #goodsName {
+            font-size: 12px;
+            text-align: left;
+        }
+        .desc #goodsName a{
+            color: #000;
+            text-decoration: none;
+        }
+        .desc #goodsName a:hover{
+            color: #e4393c;
+            text-decoration: none;
+        }
+        .desc #sales{
+            color: #e4393c;
+            font-size: 14px;
+            text-align: left;
+        }
+        .desc #shop{
+            font-size: 14px;
+            text-align: left;
+            color: #5c9bb7;
+        }
+
+        .img{
+            margin: 5px 10px;
+            width: 200px;
+            height: 400px;
+            border: 1px solid transparent;
+        }
+        .img:hover{
+            border: 1px solid #777;
+        }
+
+        .img img{
+            width: 100%;
+            height: auto;
+        }
+
+
+    </style>
+</head>
+<script type="text/javascript">
+    document.write(head.import.body.innerHTML);
+</script>
+<body style="overflow-y: scroll;overflow-x:hidden">
+<hr style="margin-top: 8%;width: 100%"/>
+
+<div class="row" id="goodsInfo" style="display: none">
+    <div class="column left" style="text-align: right">
+        <h2>左</h2>
+        <h2>侧</h2>
+        <h2>栏</h2>
+    </div>
+
+    <div class="column middle" id="goodsList">
+        <div id="goodsFilter">
+            <div style="text-align: left;background-color: #5c9bb7;margin-bottom: 0px"><em style="font-size: larger">商品筛选</em>&nbsp;&nbsp;&nbsp;&nbsp;<em style="font-size: large">共有<em id="goodsNum"></em>个商品</em></div>
+            <div id="isShowBrand" style="text-align: left;line-height: 34px">
+                <div style="width:60px;height: 34px;float: left">品牌：</div>
+                <div id="brandCondition" style="width:500px;height: 34px">
+                    <a href="/webGraduation_war_exploded/pages/goodsList.html?goodsName=牛仔&pageNum=2&pageSize=20&brandName=品牌1" name="brandName" id="brandName" style="text-decoration: none;margin:0 15px 0 0">品牌1</a>
+                    <a href="#" style="text-decoration: none;margin:0 15px 0 0">品牌2</a>
+                    <a href="#" style="text-decoration: none;margin:0 15px 0 0">品牌3</a>
+                    <a href="#" style="text-decoration: none;margin:0 15px 0 0">品牌4</a>
+                    <a href="#" style="text-decoration: none;margin:0 15px 0 0">品牌5</a>
+                </div>
+                <hr style="margin: 1px 0;width: 100%;border: 1px dashed #000000"/>
+            </div>
+            <div id="isShowPrice" style="text-align: left;line-height: 34px">
+                <div style ="width:60px;height: 34px;float: left">价格：</div>
+                <div id="priceCondition"  style="width:500px;height: 34px">
+                    <a href="/webGraduation_war_exploded/pages/goodsList.html?goodsName=牛仔&pageNum=2&pageSize=20&price=0-100" id="price" name="price" style="text-decoration: none;margin:0 20px 0 0">0-100</a>
+                    <a href="/webGraduation_war_exploded/pages/goodsList.html?goodsName=牛仔&pageNum=2&pageSize=20&price=101-200" style="text-decoration: none;margin:0 20px 0 0">101-200</a>
+                    <a href="#" style="text-decoration: none;margin:0 20px 0 0">201-300</a>
+                    <a href="#" style="text-decoration: none;margin:0 20px 0 0">301-400</a>
+                    <a href="#" style="text-decoration: none;margin:0 20px 0 0">401以上</a>
+                </div>
+                <hr style="margin: 1px 0;width: 100%;border: 1px dashed #000000"/>
+            </div>
+            <div id="goodsFilter_two" style="height: 34px">
+                <div id="moreCondition" style="text-align: left;line-height: 34px;float: left">
+                    <a class="condition" href="#" style=" text-decoration: none">综合排序</a>
+                    <a href="#" style="text-decoration: none">销量</a>
+                    <a href="#" style="text-decoration: none">价格</a>
+                </div>
+                <div id="page" style="float: left;height: 34px;margin-left: 70%">
+                    <div style="line-height: 34px;float: left"><span id="pageLeft"></span>/<span id="pageNum"></span></div>
+                    <div style="float: left;line-height: 34px"><a id="click_pageLeft" style="font-size:25px;text-decoration: none" href="#"><</a><a id="click_pageRight" style="font-size:25px;text-decoration: none" href="#">></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="column right" style="text-align: left">
+        <h2>右</h2>
+        <h2>侧</h2>
+        <h2>栏</h2>
+    </div>
+</div>
+
+<div id="error" style="display: none">
+    <h1 style="margin-left: 40% ">抱歉！没有相关数据</h1>
+</div>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="/webGraduation_war_exploded/js/util.js"></script>
+<script type="text/javascript">
+    $(function () {
+
+        //动态添加条件列表，因商品缺少暂不添加
+
+        //根据url显示筛选条件
+        isShowCondition(window.location.href,"brandName","isShowBrand");
+        isShowCondition(window.location.href,"price","isShowPrice");
+
+        //更改页面
+        $("#pageLeft").html(/pageNum=[0-9]+/.exec(window.location.href)[0].split('=')[1]);
+
+        //请求商品数据
+        var param = window.location.search;
+        param = param.substr(1,param.length);
+        var goodsInfo;
+        $.ajax({
+            async:false,
+            url:getRootPath()+"/GoodsList",
+            type:"POST",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            data:param,
+            dataType:JSON,
+            success:function (data) {
+                data = eval("("+data+")");
+               showData(data);
+            },
+            error:function () {
+                alert("没得到结果");
+            }
+        })
+
+
+
+    //  根据页码切换页面
+        $("#click_pageLeft").click(function () {
+            if (parseInt($("#pageLeft").html()) == 1){
+                $("#click_pageLeft").css("href","#")
+            }else {
+                $("#pageLeft").html(parseInt($("#pageLeft").html()) - 1);
+                let url = replaceUrl("pageNum",parseInt($("#pageLeft").html()),document.location.href)
+                window.location.href  = url;
+            }
+        })
+
+        $("#click_pageRight").click(function () {
+            if (parseInt($("#pageLeft").html()) == parseInt($("#pageNum").html())){
+                $("#click_pageRight").css("href","#")
+            }else {
+                $("#pageLeft").html(parseInt($("#pageLeft").html()) + 1);
+                let url = replaceUrl("pageNum",parseInt($("#pageLeft").html()),document.location.href)
+                window.location.href  = url;
+            }
+        })
+    })
+
+    //动态展示商品列表
+    function showData(data) {
+        console.log(data)
+        if (data.goodsNum != "0"){
+            var map = data.goodsList;
+            $("#error").css("display","none");
+            $("#goodsInfo").css("display","block")
+            $("#goodsNum").html(data.goodsNum);
+            $("#pageNum").html(Math.ceil(data.goodsNum/20))
+
+
+            for (let i=0;i<map.length;i++){
+                let info = $("<div class=\"img\" style=\"float: left\">\n" +
+                    "            <a target=\"_blank\" href=\""+map[i].goodsUrl+"\">\n" +
+                    "                <img src=\"" +map[i].goodsImgUrl+ "\">\n" +
+                    "            </a>\n" +
+                    "            <div class=\"desc\">\n" +
+                    "                <p id=\"price\"><em>¥</em><i>"+map[i].currPrice+"</i></p>\n" +
+                    "                <p id=\"goodsName\"><a target=\"_blank\" href=\""+map[i].goodsUrl+"\">"+map[i].goodsName+"</a></p>\n" +
+                    "                <p id=\"sales\"><em>销量：</em>"+map[i].sales+"</p>\n" +
+                    "                <p id=\"shop\"><a href=\"#\" style=\"text-decoration: none\">"+map[i].shopName+"</a></p>\n" +
+                    "            </div>\n" +
+                    "        </div>");
+
+                $("#goodsList").append(info);
+            }
+        }else {
+            $("#error").css("display","block")
+            $("#goodsInfo").css("display","none");
+        }
+    }
+
+</script>
+</html>

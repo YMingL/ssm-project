@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webgraduation.dao.GoodsMapper">
+    <resultMap id="GoodsResultMap" type="com.webgraduation.entity.Goods">
+        <id column="goodsId" property="goodsId"/>
+        <result column="goodsUrl" property="goodsUrl"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="origPrice" property="origPrice"/>
+        <result column="currPrice" property="currPrice"/>
+        <result column="sales" property="sales"/>
+        <result column="goodsImgUrl" property="goodsImgUrl"/>
+        <result column="brandName" property="brandName"/>
+        <result column="shopName" property="shopName"/>
+        <collection property="category" ofType="com.webgraduation.entity.ZdCategory">
+            <id column="categoryId" property="categoryId"/>
+            <result column="categoryName" property="categoryName"/>
+            <result column="categoryLevel" property="categoryLevel"/>
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        goods.*,zdbrand.brandName brandName,shop.shopName shopName,zdcategory.categoryId categoryId,zdcategory.categoryName categoryName,zdcategory.categoryLevel categoryLevel
+    </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="GoodsResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        inner join zdbrand on goods.brandId = zdbrand.brandId
+        inner join shop on shop.shopId = goods.shopId
+        inner join goodscategory b on goods.goodsId = b.goodsId
+        inner join zdcategory c on b.categoryId = c.categoryId
+        where goods.goodsId = #{goodsId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByGoodsName" parameterType="java.lang.String" resultMap="GoodsResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from goods
+        inner join zdbrand on goods.brandId = zdbrand.brandId
+        inner join shop on shop.shopId = goods.shopId
+        inner join goodscategory b on goods.goodsId = b.goodsId
+        inner join zdcategory c on b.categoryId = c.categoryId
+        where goods.goodsName like concat("%",#{goodsName,jdbcType=VARCHAR},"%")
+    </select>
+
+<!--    <select id="selectOrderBySales" parameterType="java.lang.String" resultMap="GoodsResultMap">-->
+<!--        select-->
+<!--        <include refid="Base_Column_List"/>-->
+<!--        from goods-->
+<!--        inner join goodscategory b on goods.goodsId = b.goodsId-->
+<!--        inner join zdcategory c on b.categoryId = c.categoryId-->
+<!--        where goods.goodsName like concat("%",#{goodsName,jdbcType=VARCHAR},"%")-->
+<!--        order by goods.sales-->
+<!--    </select>-->
+
+    <select id="selectListPage" parameterType="com.webgraduation.dto.PageParam" resultMap="GoodsResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from goods
+        inner join zdbrand on goods.brandId = zdbrand.brandId
+        inner join shop on shop.shopId = goods.shopId
+        inner join goodscategory on goods.goodsId = goodscategory.goodsId
+        inner join zdcategory on goodscategory.categoryId = zdcategory.categoryId
+        where goods.goodsName like concat("%",#{goodsName},"%")
+        <if test="brandName != null and brandName != ''">
+            and zdbrand.brandName = #{brandName}
+        </if>
+        <if test="price != null and price !=''">
+            and (currPrice between #{minPrice,jdbcType=INTEGER} and #{maxPrice,jdbcType=INTEGER})
+<!--            <![CDATA[and currPrice >= #{minPrice} and currPrice <= #{maxPrice}]]>-->
+        </if>
+        order by goods.sales
+        limit #{pageStart},#{pageSize}
+    </select>
+
+<!--    和上一个片段相似，考虑抽取sql片段-->
+    <select id="getGoodsNum" parameterType="com.webgraduation.dto.PageParam" resultType="java.lang.Integer">
+        SELECT
+        COUNT(goods.goodsId)
+        from goods
+        inner join zdbrand on goods.brandId = zdbrand.brandId
+        inner join shop on shop.shopId = goods.shopId
+        inner join goodscategory on goods.goodsId = goodscategory.goodsId
+        inner join zdcategory on goodscategory.categoryId = zdcategory.categoryId
+        where goods.goodsName like concat("%",#{goodsName},"%")
+        <if test="brandName != null and brandName != ''">
+            and zdbrand.brandName = #{brandName}
+        </if>
+        <if test="price != null and price !=''">
+            and (currPrice between #{minPrice,jdbcType=INTEGER} and #{maxPrice,jdbcType=INTEGER})
+        </if>
+    </select>
+
+
+    <delete id="deleteList">
+        delete from goods;
+    </delete>
+
+    <insert id="inert" parameterType="com.webgraduation.entity.Goods">
+        insert into goods values (#{goodsId},#{goodsUrl},#{goodsName},#{origPrice},#{currPrice},#{sales},#{goodsImgUrl},#{brandId},#{shopId})
+    </insert>
+
+    <insert id="insertList" parameterType="java.util.List">
+        insert into goods
+        <foreach collection="list" open="values" separator="," close="" item="one">
+            (#{one.goodsId},#{one.goodsUrl},#{one.goodsName},#{one.origPrice},#{one.currPrice},#{one.sales},#{one.goodsImgUrl},#{one.brandId},#{one.shopId})
+        </foreach>
+    </insert>
+</mapper>

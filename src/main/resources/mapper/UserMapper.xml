@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webgraduation.dao.UserMapper">
+    <resultMap id="usermapper" type="com.webgraduation.entity.User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="mail" property="mail"/>
+        <result column="phone" property="phone"/>
+        <result column="goldNum" property="goldNum"/>
+        <result column="level" property="level"/>
+        <result column="address" property="address"/>
+    </resultMap>
+
+    <delete id="deleteByName" parameterType="java.lang.String">
+        delete from user where userName = #{userName}
+    </delete>
+
+    <insert id="insert" parameterType="com.webgraduation.entity.User">
+        insert into user (userId,userName,password,mail,phone,goldNum,level,address) values
+         (#{userId},#{userName},#{password},#{mail},#{phone},#{goldNum},#{level},#{address})
+    </insert>
+
+    <update id="updateByName" parameterType="com.webgraduation.entity.User">
+        update user
+        set userName=#{userName},password =#{passowrd} ,mail = #{mail},phone=#{phone},address=#{address}
+        where userId = #{userId}
+    </update>
+
+    <select id="selectByName" parameterType="java.lang.String" resultMap="usermapper">
+        select user.* from user where userName = #{userName}
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+.bar{
+    background-color: #5c9bb7;
+    background-image: -webkit-linear-gradient(top,#5c9bb7,#5392ad);
+    background-image: -moz-linear-gradient(top,#5c9bb7,#5392ad);
+    background-image: linear-gradient(top,#5c9bb7,#5392ad);
+    box-shadow: 0  1px 1px #ccc;
+    border-radius: 2px;
+    width:400px;
+    padding: 14px;
+    margin: 45px auto 20px;
+    position: relative;
+}
+.bar #searching{
+    background:#fff no-repeat 13px 13px;
+    border: none;
+    width:75%;
+    line-height: 19px;
+    padding: 11px 0;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px #c4c4c4 inset;
+    text-align: left;
+    font-size: 14px;
+    font-family: inherit;
+    color: #738289;
+    font-weight: bold;
+    outline: none;
+    text-indent: 40px;
+}
+.bar #searching-btn{
+    background:#738289 no-repeat 39px 39px;
+    border: none;
+    font-size: 18px;
+    margin-left: 20px;
+    cursor: pointer;
+}
