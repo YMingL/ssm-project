@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text],input[type=password], select, textarea {
+            width: 300px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit],input[type=button] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 85px;
+            width: 50px;
+            height: 35px;
+        }
+
+        input[type=submit],input[type=button]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            margin: 5% auto;
+            width: 400px;
+            height: 300px;
+        }
+
+        .col-1 {
+            float: left;
+            width: 60px;
+            margin-top: 6px;
+        }
+
+        .col-2 {
+            float: left;
+            width:300px;
+            margin-top: 6px;
+        }
+        .col-3 {
+            float: none;
+            margin-top: 6px;
+            margin-left: 60px;
+        }
+
+        /* 清除浮动 */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="loginForm">
+        <div class="row">
+            <div class="col-1">
+                <label for="userName">用户名</label>
+            </div>
+            <div class="col-2">
+                <input type="text" id="userName" name="userName" placeholder="Your name..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_uesrName"></span>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                <label for="password">密&#12288;码</label>
+            </div>
+            <div class="col-2">
+                <input type="password" id="password" name="password" placeholder="Your password..">
+            </div>
+        </div>
+        <div class="row">
+            <span class="col-3" style="color: red" id="info_pass"></span>
+        </div>
+        <div class="row">
+            <label class="col-3"><input type="checkbox" id="remember" name="remember" value="1" checked/>记住密码</label>
+            <a class="col-3" href="#" id="forget" title="还在开发中！">忘记密码</a>
+        </div>
+        <div class="row">
+            <input class="col-3" type="button" id="submit-btn" value="登陆">
+            <input class="col-3" type="button" id="regist" value="注册">
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript">
+    $(function () {
+        getFocus("userName");
+        var username = getUserNameCookie($("#userName").attr("name"));
+        var password = getUserNameCookie($("#password").attr("name"));
+        $("#userName").attr("value",username);
+        $("#password").attr("value",password);
+    })
+
+    $("#userName").click(function(){
+        $("#info_uesrName").html("")
+    }
+
+    );
+    $("#password").click(function(){
+            $("#info_pass").html("")
+        }
+    )
+
+    // 登陆验证
+    $("#submit-btn").click(function(){
+        var user = $("#userName").val();
+        var pass = $("#password").val();
+        if(user == ""){
+            $("#info_uesrName").html("姓名不能为空")
+        }
+        if(pass == ""){
+            $("#info_pass").html("密码不能为空")
+        }
+        if(user!="" && pass!=""){
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: getRootPath()+"/loginVerify",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: $("#loginForm").serialize(),
+                dataType: JSON,
+                success: function (data) {
+                    data = eval("("+data+")");
+                    if(data.code == 0){
+                        alert(data.msg);
+                    }else{
+                        window.location.href=getRootPath()+"/search.html"
+                    }
+                },
+                error: function () {
+                    alert("获取数据失败")
+                }
+            })
+        }
+    })
+
+    /*注册功能*/
+    $("#regist").click(function () {
+        window.location.href= getRootPath()+"/regist.html";})
+</script>
+</html>

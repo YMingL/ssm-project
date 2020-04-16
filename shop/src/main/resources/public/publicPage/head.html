@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>搜索框</title>
+
+    <style type="text/css">
+        *{
+            padding: 0;
+            margin: 0;
+        }
+
+        #user-info{
+            margin-top: 1%;
+            margin-left: 80%;
+        }
+        .dropbtn {
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 80px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 10px 10px 10px 2px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #f9f9f9;
+        }
+
+        .search{
+            width: 400px;
+            margin: 3% auto;
+        }
+        .search input{
+            float: left;
+            height: 40px;
+            outline: none;
+            border: 1px solid red;
+            box-sizing: border-box;
+            width: 350px;
+        }
+        .search button{
+            float: right;
+            height: 40px;
+            background-color: red;
+            color: white;
+            border-style: none;
+            outline: none;
+            width: 50px;
+        }
+        .search button i{
+            font-style: normal;
+        }
+        .search button:hover{
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="user-info">
+    <a id="hello">欢迎回来！</a>
+    <div class="dropdown">
+        <a id="userInfo" class="dropbtn" style="color: red;text-decoration: underline"></a>
+        <div class="dropdown-content">
+            <a href="#" id="setting" title="还在开发中..">设置</a>
+            <a href="#" id="addGoods">添加商品</a>
+            <a href="#" title="还在开发中.." id="help">帮助</a>
+            <a href="#" id="exit">退出</a>
+        </div>
+    </div>
+</div>
+<div class="search">
+    <input type="text" placeholder="请输入..." id="searching" style="padding-left: 5px" />
+    <button id="search-btn"><i>搜索</i></button>
+</div>
+</body>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript">
+    var username = getUserNameCookie("userName");
+    console.log(username)
+    $("#userInfo").html(username)
+    $("#exit").click(function () {
+
+        $("#exit").attr("href",getRootPath()+"/logout");
+
+    })
+    $("#search-btn").click(function () {
+        var param = $("#searching").val();
+        window.location.href = getRootPath()+"/goodsList.html?goodsName="+encodeURI(param)+"&pageNum=1&pageSize=20";
+    })
+</script>
+</html>

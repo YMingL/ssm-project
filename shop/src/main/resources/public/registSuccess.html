@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body style="text-align: center">
+<h1>成功！</h1>
+<p><em style="font-size: larger"></em>&nbsp;S后跳转至登陆页面</p>
+</body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript">
+    var time = 5;
+    function showTime() {
+        $("em").html(time);
+        time -= 1;
+        if (time == 0){
+            window.location.href = getRootPath()+ "/index.html";
+        }
+        setTimeout("showTime()",1000);
+    }
+    showTime();
+
+
+</script>
+</html>
